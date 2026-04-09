@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Mapa de incendios en España</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="ui">
+      <div class="ui-inner">
+        <div class="ui-left">
+          <div class="map-title-block">
+            <span class="map-title-dot"></span>
+            <div>
+              <h1 class="map-title">Incendios en España</h1>
+              <p class="map-subtitle">Copernicus EFFIS · NASA FIRMS</p>
+              <p class="map-subtitle" id="map-updated" style="display:none"></p>
+            </div>
+          </div>
+        </div>
+        <div class="ui-right">
+          <div class="leyenda" id="leyenda-areas">
+            <span class="leyenda-item">
+              <span class="leyenda-dot" style="background:#fbbf24"></span>
+              &lt; 50 ha
+            </span>
+            <span class="leyenda-item">
+              <span class="leyenda-dot" style="background:#f97316"></span>
+              50–500 ha
+            </span>
+            <span class="leyenda-item">
+              <span class="leyenda-dot" style="background:#ef4444"></span>
+              500–2.000 ha
+            </span>
+            <span class="leyenda-item">
+              <span class="leyenda-dot" style="background:#7f1d1d"></span>
+              &gt; 2.000 ha
+            </span>
+          </div>
+          <div class="leyenda-focos hidden" id="leyenda-focos">
+            <span class="leyenda-foco-item">
+              <span class="leyenda-foco-dot dot-24h"></span>
+              Foco 24h
+            </span>
+            <span class="leyenda-foco-item">
+              <span class="leyenda-foco-dot dot-48h"></span>
+              Foco 48h
+            </span>
+          </div>
+          <div class="contador-widget">
+            <span class="contador-num" id="contador-ha">—</span>
+            <span class="contador-label" id="contador-ha-label">ha quemadas</span>
+          </div>
+          <div class="contador-sep"></div>
+          <div class="contador-widget">
+            <span class="contador-num" id="contador-focos">—</span>
+            <span class="contador-label">focos 24h</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main id="map"></main>
+  </div>
+
+  <!-- Panel de control -->
+  <div id="control-panel">
+
+    <button id="reset-btn" class="panel-reset">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+      </svg>
+      Volver al inicio
+    </button>
+
+    <div class="panel-sep"></div>
+
+    <!-- Áreas quemadas -->
+    <div class="panel-row">
+      <span class="panel-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+        </svg>
+        Áreas quemadas
+      </span>
+      <button id="areas-btn" class="panel-toggle active"></button>
+    </div>
+    <div id="year-selector" class="year-pills-wrap hidden">
+      <div id="year-pills"></div>
+    </div>
+
+    <div class="panel-sep"></div>
+
+    <!-- Focos activos -->
+    <div class="panel-row">
+      <span class="panel-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
+        </svg>
+        Focos activos
+      </span>
+      <button id="focos-btn" class="panel-toggle active"></button>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
