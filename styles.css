@@ -163,7 +163,7 @@ html, body, #app {
 /* ── Panel de control ── */
 #control-panel {
   position: fixed;
-  top: 86px;
+  top: 110px;
   left: 16px;
   z-index: 100;
   background: var(--bg);
