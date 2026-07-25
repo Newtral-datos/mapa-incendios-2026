@@ -484,7 +484,9 @@ html, body, #app {
     row-gap: 6px;
   }
   .map-title { font-size: 14px; }
+  .map-title-block > div { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 8px; }
   .map-subtitle { display: none; }
+  #map-updated { display: block; font-size: 9px; white-space: nowrap; }
   .map-title-dot { width: 8px; height: 8px; }
 
   /* ui-right: leyenda + contadores, compactos */

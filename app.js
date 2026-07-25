@@ -114,8 +114,10 @@ map.on('load', async () => {
 
   if (statsData?.actualizado) {
     const el = document.getElementById('map-updated');
-    const d = new Date(statsData.actualizado + 'T00:00:00');
-    el.textContent = 'Actualizado ' + d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+    const d = new Date(statsData.actualizado);
+    const fecha = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const hora = d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    el.textContent = `Actualizado ${fecha} a las ${hora}`;
     el.style.display = '';
   }
 
