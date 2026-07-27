@@ -1,0 +1,3 @@
+incendios_areas.pmtiles merge=keep-theirs
+incendios_activos.pmtiles merge=keep-theirs
+stats.json merge=keep-theirs
