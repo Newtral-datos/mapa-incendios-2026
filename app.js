@@ -2,10 +2,37 @@
 const AREAS_FILE   = 'incendios_areas.pmtiles';
 const ACTIVOS_FILE = 'incendios_activos.pmtiles';
 
+/* ── Mapa base — estilo vectorial CARTO servido directamente (sin API key) ── */
+const CARTO_STYLE_URL = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+const cartoStyleRaw = await fetch(CARTO_STYLE_URL).then(r => r.json());
+
+/* El estilo de CARTO fija el texto de los topónimos a {name_en}; se sustituye
+   por {name} para que salgan en castellano (esquema OpenMapTiles). */
+const cartoStyle = {
+  ...cartoStyleRaw,
+  layers: cartoStyleRaw.layers.map(layer => {
+    const textField = layer.layout?.['text-field'];
+    if (textField === undefined) return layer;
+    return {
+      ...layer,
+      layout: {
+        ...layer.layout,
+        'text-field': JSON.parse(JSON.stringify(textField).replaceAll('name_en', 'name'))
+      }
+    };
+  })
+};
+
 /* ── Mapa ── */
 const map = new maplibregl.Map({
   container: 'map',
-  style: { version: 8, sources: {}, layers: [] },
+  style: {
+    version: 8,
+    sources: cartoStyle.sources,
+    sprite: cartoStyle.sprite,
+    glyphs: cartoStyle.glyphs,
+    layers: cartoStyle.layers
+  },
   center: [-8.5, 36.5],
   zoom: 4.3,
   minZoom: 4.3,
@@ -120,15 +147,6 @@ map.on('load', async () => {
     el.textContent = `Actualizado ${fecha} a las ${hora}`;
     el.style.display = '';
   }
-
-  /* Mapa base */
-  map.addSource('basemap', {
-    type: 'raster',
-    tiles: ['https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png'],
-    tileSize: 256,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
-  });
-  map.addLayer({ id: 'basemap', type: 'raster', source: 'basemap', paint: { 'raster-opacity': 0.85 } });
 
   /* Protocolo PMTiles */
   const protocol = new pmtiles.Protocol();
